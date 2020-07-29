@@ -1,0 +1,160 @@
+#define EPS 1e-9
+#define Vector Point
+template<class T>
+class Point {
+public:
+	T x, y;
+	Point() : x(0), y(0) {
+	}
+
+	template<class tp>
+	Point(const tp a, const tp b) : x(a), y(b) {
+	}
+
+	template<class tp>
+	Point(const Point<tp> &other) : x(other.x), y(other.y) {
+	}
+
+	template<class tp>
+	Point<T>& operator=(const Point<tp> &other) {
+		x = other.x;
+		y = other.y;
+		return *this;
+	}
+
+	template<class tp>
+	Point<T>& operator -=(const Point<tp> &other) {
+		x -= other.x;
+		y -= other.y;
+		return *this;
+	}
+
+	template<class tp>
+	Point<T>& operator +=(const Point<tp> &other) {
+		x += other.x;
+		y += other.y;
+		return *this;
+	}
+
+	template<class tp>
+	Point<T>& operator *=(const Point<tp> &other) {
+		x *= other.x;
+		y *= other.y;
+		return *this;
+	}
+
+	template<class tp>
+	auto operator+(const Point<tp> other) const {
+		return make_point(x + other.x, y + other.y);
+	}
+
+	template<class tp>
+	auto operator-(const Point<tp> &other) const {
+		return make_point(x - other.x, y - other.y);
+	}
+
+	template<class tp>
+	auto operator *(const tp factor) {
+		return make_point(x * factor, y * factor);
+	}
+
+	Point<T> operator-() {
+		return Point<T>(-x, -y);
+	}
+
+	template<class tp>
+	bool operator==(const Point<tp> &other) const {
+		return (abs(x - other.x) < EPS && abs(y - other.y) < EPS);
+	}
+
+	template<class tp>
+	bool operator!=(const Point<tp> &other) const {
+		return !operator==(other);
+	}
+
+	template<class tp>
+	bool operator<(const Point<tp> &other) const {
+		if (abs(x - other.x) < EPS) { //equal
+			if (abs(y - other.y) < EPS) return false;
+			return y < other.y;
+		}
+		return x < other.x;
+	}
+	template<class tp>
+	bool operator<=(const Point<tp> &other) const {
+		return operator==(other) || operator<(other);
+	}
+
+	template<class tp>
+	bool operator>(const Point<tp> &other) const {
+		if (abs(x - other.x) < EPS) { //equal
+			if (abs(y - other.y) < EPS) return false;
+			return y > other.y;
+		}
+		return x > other.x;
+	}
+
+	template<class tp>
+	bool operator>=(const Point<tp> &other) const {
+		return operator==(other) || operator>(other);
+	}
+
+	template<class tp>
+	auto translate(const Vector<tp> &v) {
+		return this->operator+(v);
+	}
+
+	// scaling vector p->c by ratio
+	template<class tp1, class tp2>
+	auto scale(const Point<tp1> &c, const tp2 ratio) {
+		// make vector c->p then scale this vector by ratio
+		// then get the new point and return it
+		// return new Point p' not new Vector cp'
+		return (*this - c) * ratio + c;
+	}
+
+	template<class tp1, class tp2>
+// rotate point by theta degree around c point
+	Point<double> rotate(const Point<tp1> &c, const tp2 deg) {
+		double rad = deg / 180.0 * acos(-1);
+
+		Vector<double> vec(*this - c);
+
+		vec = Vector<double>(vec.x * cos(rad) - vec.y * sin(rad),
+				vec.y * cos(rad) + vec.x * sin(rad));
+
+		return vec + c;
+	}
+};
+
+template<class tp>
+Point<tp> make_point(const tp a, const tp b) {
+	return Point<tp>(a, b);
+}
+
+template<class tp>
+ostream& operator<<(ostream &out, const Point<tp> p) {
+	return out << p.x << ' ' << p.y;
+}
+
+template<class tp>
+istream& operator>>(istream &in, Point<tp> &p) {
+	return in >> p.x >> p.y;
+}
+
+template<class tp1, class tp2>
+auto scale(const Vector<tp1> &v, const tp2 ratio) {
+	return v * ratio; // return new Vector v'
+}
+
+template<class tp1, class tp2>
+auto cross(const Vector<tp1> &a, const Vector<tp2> &b) {
+	// |a|*|b|*sin(x)
+	return (a.x * b.y - a.y * b.x);
+}
+
+template<class tp1, class tp2>
+auto dot(const Vector<tp1> &a, const Vector<tp2> &b) {
+	// |a|*|b|*cos(x)
+	return (a.x * b.x + a.y * b.y);
+}
