@@ -1,14 +1,14 @@
 #define EPS 1e-9
 #define Vector Point
-#define T long long
+#define _T_ long long
 class Point {
 public:
-	T x, y;
+	_T_ x, y;
 	Point() :
 			x(0), y(0) {
 	}
 
-	Point(const T a, const T b) :
+	Point(const _T_ a, const _T_ b) :
 			x(a), y(b) {
 	}
 
@@ -33,54 +33,6 @@ public:
 
 	Point& operator *=(const Point &other) {
 		Point(x * other.x, y * other.y);
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		return *this;
 	}
 
@@ -92,7 +44,7 @@ public:
 		return Point(x - other.x, y - other.y);
 	}
 
-	Point operator *(const T factor) const {
+	Point operator *(const _T_ factor) const {
 		return Point(x * factor, y * factor);
 	}
 
@@ -157,15 +109,14 @@ public:
 	}
 };
 
-Point make_point(const T a, const T b) {
+Point make_point(const _T_ a, const _T_ b) {
 	return Point(a, b);
 }
 
-ostream& operator<<(ostream &out, const Point p) {
+ostream& operator<<(ostream &out, const Point &p) {
 	return out << p.x << ' ' << p.y;
 }
 
-template<class tp>
 istream& operator>>(istream &in, Point &p) {
 	return in >> p.x >> p.y;
 }
@@ -174,12 +125,12 @@ Point scale(const Vector &v, const double ratio) {
 	return v * ratio; // return new Vector v'
 }
 
-T cross(const Vector &a, const Vector &b) {
+_T_ cross(const Vector &a, const Vector &b) {
 	// |a|*|b|*sin(x)
 	return (a.x * b.y - a.y * b.x);
 }
 
-T dot(const Vector &a, const Vector &b) {
+_T_ dot(const Vector &a, const Vector &b) {
 	// |a|*|b|*cos(x)
 	return (a.x * b.x + a.y * b.y);
 }
