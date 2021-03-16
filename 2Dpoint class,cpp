@@ -1,92 +1,78 @@
 #define EPS 1e-9
 #define Vector Point
-template<class T>
+#define T long long
 class Point {
 public:
 	T x, y;
-	Point() : x(0), y(0) {
+	Point() :
+			x(0), y(0) {
 	}
 
-	template<class tp>
-	Point(const tp a, const tp b) : x(a), y(b) {
+	Point(const T a, const T b) :
+			x(a), y(b) {
 	}
 
-	template<class tp>
-	Point(const Point<tp> &other) : x(other.x), y(other.y) {
+	Point(const Point &other) :
+			Point(other.x, other.y) {
 	}
 
-	template<class tp>
-	Point<T>& operator=(const Point<tp> &other) {
-		x = other.x;
-		y = other.y;
+	Point& operator=(const Point &other) {
+		Point(other.x, other.y);
 		return *this;
 	}
 
-	template<class tp>
-	Point<T>& operator -=(const Point<tp> &other) {
-		x -= other.x;
-		y -= other.y;
+	Point& operator -=(const Point &other) {
+		Point(x - other.x, y - other.y);
 		return *this;
 	}
 
-	template<class tp>
-	Point<T>& operator +=(const Point<tp> &other) {
-		x += other.x;
-		y += other.y;
+	Point& operator +=(const Point &other) {
+		Point(x + other.x, y + other.y);
 		return *this;
 	}
 
-	template<class tp>
-	Point<T>& operator *=(const Point<tp> &other) {
-		x *= other.x;
-		y *= other.y;
+	Point& operator *=(const Point &other) {
+		Point(x * other.x, y * other.y);
 		return *this;
 	}
 
-	template<class tp>
-	auto operator+(const Point<tp> other) const {
-		return make_point(x + other.x, y + other.y);
+	Point operator+(const Point &other) const {
+		return Point(x + other.x, y + other.y);
 	}
 
-	template<class tp>
-	auto operator-(const Point<tp> &other) const {
-		return make_point(x - other.x, y - other.y);
+	Point operator-(const Point &other) const {
+		return Point(x - other.x, y - other.y);
 	}
 
-	template<class tp>
-	auto operator *(const tp factor) {
-		return make_point(x * factor, y * factor);
+	Point operator *(const T factor) const {
+		return Point(x * factor, y * factor);
 	}
 
-	Point<T> operator-() {
-		return Point<T>(-x, -y);
+	Point operator-() const {
+		return Point(-x, -y);
 	}
 
-	template<class tp>
-	bool operator==(const Point<tp> &other) const {
+	bool operator==(const Point &other) const {
 		return (abs(x - other.x) < EPS && abs(y - other.y) < EPS);
 	}
 
-	template<class tp>
-	bool operator!=(const Point<tp> &other) const {
+	bool operator!=(const Point &other) const {
 		return !operator==(other);
 	}
 
-	template<class tp>
-	bool operator<(const Point<tp> &other) const {
+	bool operator<(const Point &other) const {
 		if (abs(x - other.x) < EPS) { //equal
 			if (abs(y - other.y) < EPS) return false;
 			return y < other.y;
 		}
 		return x < other.x;
 	}
-	template<class tp>
-	bool operator<=(const Point<tp> &other) const {
+
+	bool operator<=(const Point &other) const {
 		return operator==(other) || operator<(other);
 	}
 
-	template<class tp>
-	bool operator>(const Point<tp> &other) const {
+	bool operator>(const Point &other) const {
 		if (abs(x - other.x) < EPS) { //equal
 			if (abs(y - other.y) < EPS) return false;
 			return y > other.y;
@@ -94,67 +80,63 @@ public:
 		return x > other.x;
 	}
 
-	template<class tp>
-	bool operator>=(const Point<tp> &other) const {
+	bool operator>=(const Point &other) const {
 		return operator==(other) || operator>(other);
 	}
 
-	template<class tp>
-	auto translate(const Vector<tp> &v) {
+	Point translate(const Vector &v) const {
 		return this->operator+(v);
 	}
 
 	// scaling vector p->c by ratio
-	template<class tp1, class tp2>
-	auto scale(const Point<tp1> &c, const tp2 ratio) {
+	Point scale(const Point &c, const double ratio) {
 		// make vector c->p then scale this vector by ratio
 		// then get the new point and return it
 		// return new Point p' not new Vector cp'
 		return (*this - c) * ratio + c;
 	}
 
-	template<class tp1, class tp2>
 // rotate point by theta degree around c point
-	Point<double> rotate(const Point<tp1> &c, const tp2 deg) {
+	Point rotate(const Point &c, const double deg) {
 		double rad = deg / 180.0 * acos(-1);
 
-		Vector<double> vec(*this - c);
+		Vector vec(*this - c);
 
-		vec = Vector<double>(vec.x * cos(rad) - vec.y * sin(rad),
+		vec = Vector(vec.x * cos(rad) - vec.y * sin(rad),
 				vec.y * cos(rad) + vec.x * sin(rad));
 
 		return vec + c;
 	}
 };
 
-template<class tp>
-Point<tp> make_point(const tp a, const tp b) {
-	return Point<tp>(a, b);
+Point make_point(const T a, const T b) {
+	return Point(a, b);
 }
 
-template<class tp>
-ostream& operator<<(ostream &out, const Point<tp> p) {
+ostream& operator<<(ostream &out, const Point p) {
 	return out << p.x << ' ' << p.y;
 }
 
 template<class tp>
-istream& operator>>(istream &in, Point<tp> &p) {
+istream& operator>>(istream &in, Point &p) {
 	return in >> p.x >> p.y;
 }
 
-template<class tp1, class tp2>
-auto scale(const Vector<tp1> &v, const tp2 ratio) {
+Point scale(const Vector &v, const double ratio) {
 	return v * ratio; // return new Vector v'
 }
 
-template<class tp1, class tp2>
-auto cross(const Vector<tp1> &a, const Vector<tp2> &b) {
+T cross(const Vector &a, const Vector &b) {
 	// |a|*|b|*sin(x)
 	return (a.x * b.y - a.y * b.x);
 }
 
-template<class tp1, class tp2>
-auto dot(const Vector<tp1> &a, const Vector<tp2> &b) {
+T dot(const Vector &a, const Vector &b) {
 	// |a|*|b|*cos(x)
 	return (a.x * b.x + a.y * b.y);
+}
+
+int main() {
+
+	return 0;
 }
