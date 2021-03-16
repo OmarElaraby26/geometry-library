@@ -17,7 +17,8 @@ public:
 	}
 
 	Point& operator=(const Point &other) {
-		Point(other.x, other.y);
+		x = other.x;
+		y = other.y;
 		return *this;
 	}
 
@@ -69,7 +70,7 @@ public:
 	}
 
 	bool operator<=(const Point &other) const {
-		return operator==(other) || operator<(other);
+		return (operator==(other) || operator<(other));
 	}
 
 	bool operator>(const Point &other) const {
@@ -107,6 +108,38 @@ public:
 
 		return vec + c;
 	}
+
+	Point rotate90(const Point &c) {
+		//	vec(x, y)->vec(y, -x);
+		Vector vec(*this - c);
+		{ // swap
+			_T_ temp = vec.x;
+			vec.x = vec.y;
+			vec.y = temp;
+		}
+		vec.x = -vec.x;
+		return vec + c;
+
+	}
+
+	Point rotate180(const Point &c) {
+//		vec(x, y)->vec(-x, -y);
+		Vector vec(*this - c);
+		vec = -vec;
+		return vec + c;
+	}
+
+	Point rotate270(const Point &c) {
+//		vec(x, y)->vec(-y, x);
+		Vector vec(*this - c);
+		{ // swap
+			_T_ temp = vec.x;
+			vec.x = vec.y;
+			vec.y = temp;
+		}
+		vec.y = -vec.y;
+		return vec + c;
+	}
 };
 
 Point make_point(const _T_ a, const _T_ b) {
@@ -125,12 +158,12 @@ Point scale(const Vector &v, const double ratio) {
 	return v * ratio; // return new Vector v'
 }
 
-_T_ cross(const Vector &a, const Vector &b) {
+_T_ crossProduct(const Vector &a, const Vector &b) {
 	// |a|*|b|*sin(x)
 	return (a.x * b.y - a.y * b.x);
 }
 
-_T_ dot(const Vector &a, const Vector &b) {
+_T_ dotProduct(const Vector &a, const Vector &b) {
 	// |a|*|b|*cos(x)
 	return (a.x * b.x + a.y * b.y);
 }
