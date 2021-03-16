@@ -33,6 +33,54 @@ public:
 
 	Point& operator *=(const Point &other) {
 		Point(x * other.x, y * other.y);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		return *this;
 	}
 
@@ -134,9 +182,4 @@ T cross(const Vector &a, const Vector &b) {
 T dot(const Vector &a, const Vector &b) {
 	// |a|*|b|*cos(x)
 	return (a.x * b.x + a.y * b.y);
-}
-
-int main() {
-
-	return 0;
 }
